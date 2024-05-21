@@ -48,19 +48,18 @@ class StateMachine:
         Args
         ----
             state_name (State object): Name of the State to be added.
-            state (num): Value of the state to be added.
+            state (functin): To the name corresponding function.
 
         """
         StateMachine._states[state_name] = state
 
     def update(self, event=None):
         """
-        Initiliaze the Field instance.
+        Calls the active function with the parameter event.
 
         Args
         ----
-            state_name (State object): Name of the State to be added.
-            state (num): Value of the state to be added.
+            event (any) : This argument is passed to the called function.
 
         """
 
