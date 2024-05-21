@@ -47,7 +47,7 @@ class StateMachine:
 
         Args
         ----
-            state_name (State): Name of the State to be added.
+            state_name (State object): Name of the State to be added.
             state (num): Value of the state to be added.
 
         """
@@ -59,7 +59,7 @@ class StateMachine:
 
         Args
         ----
-            state_name (State): Name of the State to be added.
+            state_name (State object): Name of the State to be added.
             state (num): Value of the state to be added.
 
         """
@@ -73,7 +73,7 @@ class StateMachine:
 
         Args
         ----
-            value (State): State to be set.
+            value (State object): State to be set.
 
         Returns
         -------
