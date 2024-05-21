@@ -12,19 +12,52 @@ class Rover():
 
     # public Attributes
     position = ()
-    search_field = Field()
+    search_field = None
     state_machine = StateMachine()
-    # ToDo delete this: Everithing else privet______________________________________________________
+    
     # protectet attributes
     _position = ()
-    _search_field = Field()
+    _search_field = None
 
     def __init__(self, position, search_field):
+        """
+        Initialize the Rover instance.
+
+        """
 
         Rover.position = position
         Rover._position = position
 
-        
+        Rover.search_field = search_field
+        Rover._search_field = search_field
+
+    def __str__(self):
+        """
+        Get a readable view of the actual field and the actual position of the rover.
+        (Due to readability not via string comprehension solved.)
+
+        """
+        _row_string = ""
+        _return_string = ""
+
+        for _row in range(0,len(Rover._search_field.field)):
+            for _column in range(0,len(Rover._search_field.field[_row])):
+                if Rover._position == (_row,_column):
+                    _row_string += " R "
+                elif Rover._search_field.field[_row][_column] == 1:
+                    _row_string += " 1 "
+                elif Rover._search_field.field[_row][_column] == 0:
+                    _row_string += " 0 "
+                elif Rover._search_field.field[_row][_column] == "#":
+                    _row_string += " # "
+
+            _return_string += _row_string + "\n"
+            _row_string = ""
+
+        return _return_string
+            
+
+
 
 
 
@@ -51,22 +84,23 @@ if __name__ == "__main__":
             time.sleep(0.5)
 
     # 5.1 Methode __init__(self, position, search_field)
+    """
     field_data = Field(height=8, width=5)
     rover = Rover((1, 1), field_data)
     print(rover._search_field)
     print(rover._position)
     print(rover.state_machine)
-
+    """
     # 5.2 Methode __str__(self)
-    # field = [["#", "#", "#", "#", "#"],
-    #           ["#",  0, 0, 0, "#"],
-    #           ["#",  1, 0, 0, "#"],
-    #           ["#",  1, 0, 1, "#"],
-    #           ["#", "#", "#", "#", "#"]]
-    # field_data = Field(field_list = field)
-    # rover = Rover((1, 3), field_data)
-    # print(rover)
-    # print(repr(str(rover)))
+    field = [["#", "#", "#", "#", "#"],
+              ["#",  0, 0, 0, "#"],
+              ["#",  1, 0, 0, "#"],
+              ["#",  1, 0, 1, "#"],
+              ["#", "#", "#", "#", "#"]]
+    field_data = Field(field_list = field)
+    rover = Rover((1, 3), field_data)
+    print(rover)
+    print(repr(str(rover)))
 
     # 5.3 Methode move_to(self, new_position)
     # field_data = Field(height=4, width=5)
