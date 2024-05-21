@@ -33,7 +33,7 @@ class StateMachine:
 
     def __init__(self) -> None:
         """
-        Initiliaze the StateMachine instance.
+        Initialize the StateMachine instance.
 
         """
 
