@@ -19,6 +19,12 @@ class Rover():
     _position = ()
     _search_field = Field()
 
+    def __init__(self, position, search_field):
+
+        Rover.position = position
+        Rover._position = position
+
+
 
 
 
