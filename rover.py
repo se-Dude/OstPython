@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
+"""
+Module to move a rover in a given field an analyze it.
 
+Classes
+-------
+    Rover: Move a rover in a given field an analyze it.
+
+"""
 import time
 from enums import Event, State
 from console_input_thread import ConsoleInputThread
@@ -8,12 +15,20 @@ from field import Field
 
 
 class Rover():
-    """ToDo"""
+    """
+    Move a rover in a given field an analyze it.
+
+    Attributes
+    ----------
+        position : Indicates where the rover is at the momen.
+        search_field : The field inside the rover is operating.
+        state_machine : state_machine object wich holds all the known and the actual state.
+    """
 
     # public Attributes
     position = ()
     search_field = None
-    state_machine = StateMachine()
+    state_machine = None
     
     # protectet attributes
     _position = ()
@@ -23,6 +38,10 @@ class Rover():
         """
         Initialize the Rover instance.
 
+        Args
+        ----
+            position (tuple): Initial position on the given field where the rover should start operate.
+            search_field (Field object) : Field inside the rover can move.
         """
 
         Rover.position = position
@@ -36,6 +55,9 @@ class Rover():
         Get a readable view of the actual field and the actual position of the rover.
         (Due to readability not via string comprehension solved.)
 
+        Return
+        ------
+            string : A readable string of the rover in his field.
         """
         _row_string = ""
         _return_string = ""
@@ -56,6 +78,24 @@ class Rover():
 
         return _return_string
             
+    def move_to(self,new_position):
+        """
+        Move the Rover to an new Position inside the given field.
+        
+        Args
+        ----
+        new_position (tuple) : The position in the field where you want to move the rover to.
+        """
+        if type(new_position) != tuple:
+            raise TypeError("The new position must be specified as a tuple.")
+        elif len(new_position) != 2:
+            raise ValueError("The new position tuple must contain exactly 2 elements.")
+        else:
+            Rover._position = new_position
+            Rover.position = new_position
+
+
+
 
 
 
