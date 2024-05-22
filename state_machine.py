@@ -75,8 +75,8 @@ class StateMachine:
         ------
             ValueError : If the given state is not known.
         """
-        return (list(self._states.keys())[list(self._states.values()).index(self._state)])
-        
+        return (list(self._states.keys())
+                [list(self._states.values()).index(self._state)])
 
     @state.setter
     def state(self, value):
@@ -89,26 +89,26 @@ class StateMachine:
 
 
 if __name__ == "__main__":
-    
+
     # 4.1 Methode __init__(self)
-    # state_machine = StateMachine()
-    # print(state_machine._states)
-    # print(state_machine._state)
-    # print(state_machine.last_state)
+    state_machine = StateMachine()
+    print(state_machine._states)
+    print(state_machine._state)
+    print(state_machine.last_state)
 
     # 4.2 Methode add_state(self, state_name, state)
-    # state_machine = StateMachine()
+    state_machine = StateMachine()
 
-    # def pause(event=None):
-    #     print("Taking a pause...")
+    def pause(event=None):
+        print("Taking a pause...")
 
-    # def scan(event=None):
-    #     print("Scanning...")
+    def scan(event=None):
+        print("Scanning...")
 
-    # state_machine.add_state(State.PAUSE, pause)
-    # state_machine.add_state(State.SCAN, scan)
-    # print(state_machine._states)
-    
+    state_machine.add_state(State.PAUSE, pause)
+    state_machine.add_state(State.SCAN, scan)
+    print(state_machine._states)
+
     # 4.3 Property state
     state_machine = StateMachine()
 
@@ -123,16 +123,14 @@ if __name__ == "__main__":
     print(state_machine.state)
     print(state_machine._state)
     state_machine.state = State.CHECK
-    
-    
-    # 4.4 Methode update(self, event=None)
-    # state_machine = StateMachine()
 
-    # def pause(event):
-    #     print("Taking a pause...")
-    #     print(f"{event = }")
-    # state_machine.add_state(State.PAUSE, pause)
-    # state_machine.state = State.PAUSE
-    # state_machine.update()
-    # state_machine.update(State.RESUME)
-    
+    # 4.4 Methode update(self, event=None)
+    state_machine = StateMachine()
+
+    def pause(event):
+        print("Taking a pause...")
+        print(f"{event = }")
+    state_machine.add_state(State.PAUSE, pause)
+    state_machine.state = State.PAUSE
+    state_machine.update()
+    state_machine.update(State.RESUME)
