@@ -25,15 +25,6 @@ class Rover():
         state_machine : state_machine object wich holds all the known and the actual state.
     """
 
-    # public Attributes
-    position = ()
-    search_field = None
-    state_machine = None
-    
-    # protectet attributes
-    _position = ()
-    _search_field = None
-
     def __init__(self, position, search_field):
         """
         Initialize the Rover instance.
@@ -44,11 +35,16 @@ class Rover():
             search_field (Field object) : Field inside the rover can move.
         """
 
-        Rover.position = position
-        Rover._position = position
+        self.position = position
+        self._position = position
 
-        Rover.search_field = search_field
-        Rover._search_field = search_field
+        self.search_field = search_field
+        self._search_field = search_field
+
+        self.state_machine = StateMachine()
+
+        self.state_machine.add_state(State.PAUSE, self._pause)
+        # self.state_machine.add_state(State.RESUME, self._resume)
 
     def __str__(self):
         """
@@ -62,15 +58,15 @@ class Rover():
         _row_string = ""
         _return_string = ""
 
-        for _row in range(0,len(Rover._search_field.field)):
-            for _column in range(0,len(Rover._search_field.field[_row])):
-                if Rover._position == (_row,_column):
+        for _row in range(0,len(self._search_field.field)):
+            for _column in range(0,len(self._search_field.field[_row])):
+                if self._position == (_row,_column):
                     _row_string += " R "
-                elif Rover._search_field.field[_row][_column] == 1:
+                elif self._search_field.field[_row][_column] == 1:
                     _row_string += " 1 "
-                elif Rover._search_field.field[_row][_column] == 0:
+                elif self._search_field.field[_row][_column] == 0:
                     _row_string += " 0 "
-                elif Rover._search_field.field[_row][_column] == "#":
+                elif self._search_field.field[_row][_column] == "#":
                     _row_string += " # "
 
             _return_string += _row_string + "\n"
@@ -85,24 +81,96 @@ class Rover():
         Args
         ----
         new_position (tuple) : The position in the field where you want to move the rover to.
+
+        Raises
+        ------
+        ValueError : If the given tuple has more or less than 2 elements.
+        TypeError : If the given arg is not a tuple.
         """
+
         if type(new_position) != tuple:
             raise TypeError("The new position must be specified as a tuple.")
+
         elif len(new_position) != 2:
             raise ValueError("The new position tuple must contain exactly 2 elements.")
+
         else:
-            Rover._position = new_position
-            Rover.position = new_position
+            self._position = new_position
+            self.position = new_position
 
+    @property
+    def load(self):
+        """
+        Mothod to get the load of the rover.
 
+        """
+        return self._load
 
+    def take_sample(self):
+        """
+        This metod takes the Value of the rvers actual position and adds it to the rovers load.
+        """
 
+        self._load += self._search_field.value_at(self._position)
 
+    def _pause(self, event):
+        """
+        This method checks if there is a userinput incomming. If so the pause is resumed.
+
+        Args
+        ----
+            event (enum) : Event to be checkt for userinput.
+        """
+
+        if event == Event.USER_INPUT:
+            self._toggle_pause_resume()
+
+    def _resume(self, event):
+        """
+        This method wakes the rover up after the pause.
+
+        Args
+        ----
+            event (enum) : Event to be checkt for userinput.
+        """
+        if event == Event.USER_INPUT:
+            self.state_machine.state = self.state_machine.last_state
+
+    def _scan(self, event):
+        """
+        ToDo
+
+        Args
+        ----
+            event (enum) :ToDo.
+        """
+        pass
+
+    def _check(self, event):
+        """
+        ToDo
+
+        Args
+        ----
+            event (enum) : ToDo.
+        """
+        pass
+
+    def _move(self, event):
+        """
+        ToDo
+
+        Args
+        ----
+            event (enum) : ToDo.
+        """
+        pass
 
 
 
     def _toggle_pause_resume(self):
         """Toggle the state of the rover between PAUSE and RESUME."""
+        print(self.state_machine.state)
         if self.state_machine.state == State.PAUSE:
             print('Resuming...')
             self.state_machine.state = State.RESUME
@@ -132,6 +200,7 @@ if __name__ == "__main__":
     print(rover.state_machine)
     """
     # 5.2 Methode __str__(self)
+    """
     field = [["#", "#", "#", "#", "#"],
               ["#",  0, 0, 0, "#"],
               ["#",  1, 0, 0, "#"],
@@ -141,44 +210,47 @@ if __name__ == "__main__":
     rover = Rover((1, 3), field_data)
     print(rover)
     print(repr(str(rover)))
-
+    """
+    """
     # 5.3 Methode move_to(self, new_position)
-    # field_data = Field(height=4, width=5)
-    # rover = Rover((1, 1), field_data)
-    # print(rover)
-    # rover.move_to((2, 2))
-    # print(rover)
-    # rover.move_to([2, 2])
-    # rover.move_to((2, 2, 2))
-    # rover.move_to((2,))
-
+    field_data = Field(height=4, width=5)
+    rover = Rover((1, 1), field_data)
+    print(rover)
+    rover.move_to((2, 2))
+    print(rover)
+    rover.move_to([2, 2])
+    rover.move_to((2, 2, 2))
+    rover.move_to((2,))
+    """
+    """
     # 5.4 Property load
-    # field_data = Field(height=4, width=4)
-    # rover = Rover((1, 1), field_data)
-    # print(rover.load)
-
+    field_data = Field(height=4, width=4)
+    rover = Rover((1, 1), field_data)
+    print(rover.load)
+    """
+    """
     # 5.5 Methode take_sample(self)
-    # field = [["#", "#", "#", "#", "#"],
-    #          ["#",  0, 0, 0, "#"],
-    #          ["#",  1, 0, 0, "#"],
-    #          ["#",  1, 0, 1, "#"],
-    #          ["#", "#", "#", "#", "#"]]
-    # field_data = Field(field_list=field)
-    # rover = Rover((2, 1), field_data)
-    # print(rover._load)
-    # rover.take_sample()
-    # print(rover._load)
-    # rover.move_to((3, 1))
-    # rover.take_sample()
-    # print(rover._load)
-
+    field = [["#", "#", "#", "#", "#"],
+             ["#",  0, 0, 0, "#"],
+             ["#",  1, 0, 0, "#"],
+             ["#",  1, 0, 1, "#"],
+             ["#", "#", "#", "#", "#"]]
+    field_data = Field(field_list=field)
+    rover = Rover((2, 1), field_data)
+    print(rover._load)
+    rover.take_sample()
+    print(rover._load)
+    rover.move_to((3, 1))
+    rover.take_sample()
+    print(rover._load)
+    """
     # 5.6 Methode _pause(self, event)
-    # field_data = Field(height=4, width=4)
-    # rover = Rover((1, 1), field_data)
-    # print(rover.state_machine._states)
-    # rover.state_machine.state = State.PAUSE
-    # print(rover.state_machine.state)
-    # rover.state_machine.update(event=Event.USER_INPUT)
+    field_data = Field(height=4, width=4)
+    rover = Rover((1, 1), field_data)
+    print(rover.state_machine._states)
+    rover.state_machine.state = State.PAUSE
+    print(rover.state_machine.state)
+    rover.state_machine.update(event=Event.USER_INPUT)
 
     # 5.7 Methode _resume(self, event)
     # field_data = Field(height=4, width=4)

@@ -24,22 +24,15 @@ class StateMachine:
                 name of the active state is stored.
     """
 
-    # public attributes
-    last_state = None
-
-    # protectet attributes
-    _states = {}
-    _state = None
-
     def __init__(self) -> None:
         """
         Initialize the StateMachine instance.
 
         """
 
-        StateMachine._states = {}
-        StateMachine._state = None
-        StateMachine.last_state = None
+        self._states = {}
+        self._state = None
+        self.last_state = None
 
     def add_state(self, state_name, state):
         """
@@ -51,7 +44,7 @@ class StateMachine:
             state (functin): To the name corresponding function.
 
         """
-        StateMachine._states[state_name] = state
+        self._states[state_name] = state
 
     def update(self, event=None):
         """
@@ -63,7 +56,7 @@ class StateMachine:
 
         """
 
-        StateMachine._states[StateMachine._state](event)
+        self._states[self._state](event)
 
     @property
     def state(self):
@@ -82,19 +75,21 @@ class StateMachine:
         ------
             ValueError : If the given state is not known.
         """
-        return StateMachine._states[StateMachine._state]
+        return self._states[self._state]
+        
 
     @state.setter
     def state(self, value):
-        if value in StateMachine._states:
-            StateMachine._state = value
+        if value in self._states:
+            self._state = value
         else:
             raise ValueError(f"Unknown state with name {value.name}. "
                              f"The following states are valid: "
-                             f"{[item.name for item in StateMachine._states]}")
+                             f"{[item.name for item in self._states]}")
 
 
 if __name__ == "__main__":
+    """
     # 4.1 Methode __init__(self)
     state_machine = StateMachine()
     print(state_machine._states)
@@ -113,7 +108,7 @@ if __name__ == "__main__":
     state_machine.add_state(State.PAUSE, pause)
     state_machine.add_state(State.SCAN, scan)
     print(state_machine._states)
-
+    """
     # 4.3 Property state
     state_machine = StateMachine()
 
@@ -128,14 +123,16 @@ if __name__ == "__main__":
     print(state_machine.state)
     print(state_machine._state)
     state_machine.state = State.CHECK
-
+    
+    """
     # 4.4 Methode update(self, event=None)
     state_machine = StateMachine()
 
-    def pause(event=None):
+    def pause(event):
         print("Taking a pause...")
         print(f"{event = }")
     state_machine.add_state(State.PAUSE, pause)
     state_machine.state = State.PAUSE
     state_machine.update()
-    state_machine.update("test")
+    state_machine.update(State.RESUME)
+    """
