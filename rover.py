@@ -170,7 +170,6 @@ class Rover():
 
     def _toggle_pause_resume(self):
         """Toggle the state of the rover between PAUSE and RESUME."""
-        print(self.state_machine.state)
         if self.state_machine.state == State.PAUSE:
             print('Resuming...')
             self.state_machine.state = State.RESUME
@@ -247,7 +246,6 @@ if __name__ == "__main__":
     # 5.6 Methode _pause(self, event)
     field_data = Field(height=4, width=4)
     rover = Rover((1, 1), field_data)
-    print(rover.state_machine._states)
     rover.state_machine.state = State.PAUSE
     print(rover.state_machine.state)
     rover.state_machine.update(event=Event.USER_INPUT)
