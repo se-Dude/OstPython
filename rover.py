@@ -54,6 +54,8 @@ class Rover():
         self.state_machine.add_state(State.CHECK, self._check)
         self.state_machine.add_state(State.MOVE, self._move)
 
+        self.state_machine.state = State.SCAN
+
     def __str__(self):
         """
         Get a readable view of the actual field and the actual position of the rover.
@@ -172,6 +174,9 @@ class Rover():
             self._move_dim = (move_dim_y, move_dim_x)
             self._movable_dir = self._move_dim
 
+            if self._search_field[y][x+1] == "#" and self._search_field[y+1][x] == "#":
+                self.state_machine.state = State.CHECK
+
 
     def _check(self, event):
         """
@@ -186,8 +191,10 @@ class Rover():
 
         if event == Event.PERIODIC_TIMER:
             self.take_sample()
-            x, y = self._position
-            self._search_field[x][y] = 0
+            y, x = self._position
+            self._search_field[y][x] = 0
+
+            self.state_machine.state = State.MOVE
 
 
     def _move(self, event):
@@ -219,6 +226,11 @@ class Rover():
             self._move_dim = (y_move_dim, x_move_dim)
             self._movable_dir = (y_movable, x_movable)
 
+            if x_movable == 0 and y_movable == 0:
+                self.state_machine.state = State.PAUSE
+            
+            else:
+                self.state_machine.state = State.CHECK
 
 
     def _toggle_pause_resume(self):
@@ -351,46 +363,46 @@ if __name__ == "__main__":
     # print(rover)
 
     # 5.10 Methode _move(self, event)
-    field = [["#", "#", "#", "#", "#"],
-              ["#",  0, 0, 0, "#"],
-              ["#",  1, 0, 1, "#"],
-              ["#", "#", "#", "#", "#"]]
-    field_data = Field(field_list=field)
-    rover = Rover((1, 1), field_data)
-    rover.state_machine.state = State.SCAN
-    print(rover)
-    for i in range(4):
-        rover.state_machine.update(event=Event.PERIODIC_TIMER)
-    print(rover)
-    rover.state_machine.state = State.MOVE
-    for i in range(6):
-        rover.state_machine.update(event=Event.PERIODIC_TIMER)
-        print(rover)
-        time.sleep(0.5)
+    # field = [["#", "#", "#", "#", "#"],
+    #           ["#",  0, 0, 0, "#"],
+    #           ["#",  1, 0, 1, "#"],
+    #           ["#", "#", "#", "#", "#"]]
+    # field_data = Field(field_list=field)
+    # rover = Rover((1, 1), field_data)
+    # rover.state_machine.state = State.SCAN
+    # print(rover)
+    # for i in range(4):
+    #     rover.state_machine.update(event=Event.PERIODIC_TIMER)
+    # print(rover)
+    # rover.state_machine.state = State.MOVE
+    # for i in range(6):
+    #     rover.state_machine.update(event=Event.PERIODIC_TIMER)
+    #     print(rover)
+    #     time.sleep(0.5)
 
-    field = [["#", "#", "#", "#", "#", "#"],
-             ["#",  0, 1, 1, 0, "#"],
-             ["#",  0, 1, 0, 1, "#"],
-             ["#", "#", "#", "#", "#", "#"],]
-    field_data = Field(field_list=field)
-    rover = Rover((1, 1), field_data)
-    rover.state_machine.state = State.SCAN
-    # print(rover)
-    for i in range(5):
-        rover.state_machine.update(event=Event.PERIODIC_TIMER)
-    # print(rover)
-    rover.state_machine.state = State.MOVE
-    for i in range(8):
-        rover.state_machine.update(event=Event.PERIODIC_TIMER)
-        print(rover)
-        time.sleep(0.5)
+    # field = [["#", "#", "#", "#", "#", "#"],
+    #          ["#",  0, 1, 1, 0, "#"],
+    #          ["#",  0, 1, 0, 1, "#"],
+    #          ["#", "#", "#", "#", "#", "#"],]
+    # field_data = Field(field_list=field)
+    # rover = Rover((1, 1), field_data)
+    # rover.state_machine.state = State.SCAN
+    # # print(rover)
+    # for i in range(5):
+    #     rover.state_machine.update(event=Event.PERIODIC_TIMER)
+    # # print(rover)
+    # rover.state_machine.state = State.MOVE
+    # for i in range(8):
+    #     rover.state_machine.update(event=Event.PERIODIC_TIMER)
+    #     print(rover)
+    #     time.sleep(0.5)
 
     # 6. Gesamtsystem
-    # field = [["#", "#", "#", "#", "#"],
-    #          ["#",  0, 0, 1, "#"],
-    #          ["#",  1, 1, 0, "#"],
-    #          ["#", "#", "#", "#", "#"]]
-    # field_data = Field(field_list=field)
+    field = [["#", "#", "#", "#", "#"],
+             ["#",  0, 0, 1, "#"],
+             ["#",  1, 1, 0, "#"],
+             ["#", "#", "#", "#", "#"]]
+    field_data = Field(field_list=field)
 
-    # rover = Rover((1, 1), field_data)
-    # main(rover)
+    rover = Rover((1, 1), field_data)
+    main(rover)
