@@ -22,7 +22,8 @@ class Rover():
     ----------
         position : Indicates where the rover is at the momen.
         search_field : The field inside the rover is operating.
-        state_machine : state_machine object wich holds all the known and the actual state.
+        state_machine : state_machine object wich holds
+                        all the known and the actual state.
     """
 
     def __init__(self, position, search_field):
@@ -31,7 +32,8 @@ class Rover():
 
         Args
         ----
-            position (tuple): Initial position on the given field where the rover should start operate.
+            position (tuple): Initial position on the given
+                              field where the rover should start operate.
             search_field (Field object) : Field inside the rover can move.
         """
 
@@ -45,8 +47,8 @@ class Rover():
 
         self._load = 0
 
-        self._move_dim = (0,0)
-        self._movable_dir = (0,0)
+        self._move_dim = (0, 0)
+        self._movable_dir = (0, 0)
 
         self.state_machine.add_state(State.PAUSE, self._pause)
         self.state_machine.add_state(State.RESUME, self._resume)
@@ -58,8 +60,8 @@ class Rover():
 
     def __str__(self):
         """
-        Get a readable view of the actual field and the actual position of the rover.
-        (Due to readability not via string comprehension solved.)
+        Get a readable view of the actual field and
+        the actual position of the rover.
 
         Return
         ------
@@ -68,9 +70,9 @@ class Rover():
         row_string = ""
         return_string = ""
 
-        for _row in range(0,len(self._search_field.field)):
-            for _column in range(0,len(self._search_field.field[_row])):
-                if self._position == (_row,_column):
+        for _row in range(0, len(self._search_field.field)):
+            for _column in range(0, len(self._search_field.field[_row])):
+                if self._position == (_row, _column):
                     row_string += " R "
                 elif self._search_field.field[_row][_column] == 1:
                     row_string += " 1 "
@@ -83,14 +85,15 @@ class Rover():
             row_string = ""
 
         return return_string
-            
-    def move_to(self,new_position):
+
+    def move_to(self, new_position):
         """
         Move the Rover to an new Position inside the given field.
-        
+
         Args
         ----
-        new_position (tuple) : The position in the field where you want to move the rover to.
+        new_position (tuple) : The position in the field
+                               where you want to move the rover to.
 
         Raises
         ------
@@ -98,11 +101,12 @@ class Rover():
         TypeError : If the given arg is not a tuple.
         """
 
-        if type(new_position) != tuple:
+        if not (isinstance(new_position, tuple)):
             raise TypeError("The new position must be specified as a tuple.")
 
         elif len(new_position) != 2:
-            raise ValueError("The new position tuple must contain exactly 2 elements.")
+            raise ValueError("The new position tuple must "
+                             "contain exactly 2 elements.")
 
         else:
             self._position = new_position
@@ -118,14 +122,16 @@ class Rover():
 
     def take_sample(self):
         """
-        This metod takes the Value of the rvers actual position and adds it to the rovers load.
+        This metod takes the Value of the rvers
+        actual position and adds it to the rovers load.
         """
 
         self._load += self._search_field.value_at(self._position)
 
     def _pause(self, event):
         """
-        This method checks if there is a userinput incomming. If so the pause is resumed.
+        This method checks if there is a userinput incomming.
+        If so the pause is resumed.
 
         Args
         ----
@@ -148,11 +154,13 @@ class Rover():
 
     def _scan(self, event):
         """
-        This method scans the field and moves the rover towarts lower right corner of the field.
+        This method scans the field and moves the rover
+        towarts lower right corner of the field.
 
         Args
         ----
-            event (enum) : The operation is only executed if the event is "PERIODIC_TIMER". In case of "USER_INPUT" the operation is paused.
+            event (enum) : The operation is only executed if the event is
+            "PERIODIC_TIMER". In case of "USER_INPUT" the operation is paused.
         """
         if event == Event.USER_INPUT:
             self._toggle_pause_resume()
@@ -174,17 +182,19 @@ class Rover():
             self._move_dim = (move_dim_y, move_dim_x)
             self._movable_dir = self._move_dim
 
-            if self._search_field[y][x+1] == "#" and self._search_field[y+1][x] == "#":
+            if (self._search_field[y][x+1] == "#" and
+                    self._search_field[y+1][x] == "#"):
                 self.state_machine.state = State.CHECK
-
 
     def _check(self, event):
         """
-        This methode collects the valeu of the actuel position and adds it to the Load.
+        This methode collects the valeu of the actuel
+        position and adds it to the Load.
 
         Args
         ----
-            event (enum) : The operation is only executed if the event is "PERIODIC_TIMER". In case of "USER_INPUT" the operation is paused.
+            event (enum) : The operation is only executed if the event is
+            "PERIODIC_TIMER". In case of "USER_INPUT" the operation is paused.
         """
         if event == Event.USER_INPUT:
             self._toggle_pause_resume()
@@ -196,14 +206,14 @@ class Rover():
 
             self.state_machine.state = State.MOVE
 
-
     def _move(self, event):
         """
         ToDo
 
         Args
         ----
-            event (enum) : The operation is only executed if the event is "PERIODIC_TIMER". In case of "USER_INPUT" the operation is paused.
+            event (enum) : The operation is only executed if the event is
+            "PERIODIC_TIMER". In case of "USER_INPUT" the operation is paused.
         """
         if event == Event.USER_INPUT:
             self._toggle_pause_resume()
@@ -216,22 +226,21 @@ class Rover():
             if x_movable > 0:
                 self.move_to((y_actual_position, x_actual_position-1))
                 x_movable -= 1
-                
-                
+
             elif y_movable > 0:
-                self.move_to((y_actual_position-1, x_actual_position + x_move_dim))
+                self.move_to((y_actual_position-1,
+                              x_actual_position + x_move_dim))
                 y_movable -= 1
                 x_movable = x_move_dim
-            
+
             self._move_dim = (y_move_dim, x_move_dim)
             self._movable_dir = (y_movable, x_movable)
 
             if x_movable == 0 and y_movable == 0:
                 self.state_machine.state = State.PAUSE
-            
+
             else:
                 self.state_machine.state = State.CHECK
-
 
     def _toggle_pause_resume(self):
         """Toggle the state of the rover between PAUSE and RESUME."""
@@ -256,7 +265,7 @@ if __name__ == "__main__":
             time.sleep(0.5)
 
     # 5.1 Methode __init__(self, position, search_field)
-    
+
     # field_data = Field(height=8, width=5)
     # rover = Rover((1, 1), field_data)
     # print(rover._search_field)
